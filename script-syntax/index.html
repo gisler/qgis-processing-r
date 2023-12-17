@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <meta name="author" content="Jan Caha">
+        <link rel="canonical" href="https://north-road.github.io/qgis-processing-r/script-syntax/">
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Script Syntax - Processing R Provider</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">Processing R Provider</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="dropdown active">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Syntax <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="./" class="dropdown-item active">Script Syntax</a>
+</li>
+                                    
+<li>
+    <a href="../help-syntax/" class="dropdown-item">Help Syntax</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Examples <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="../ex_vector_output/" class="dropdown-item">Example with vector output</a>
+</li>
+                                    
+<li>
+    <a href="../ex_raster_output/" class="dropdown-item">Example with raster output</a>
+</li>
+                                    
+<li>
+    <a href="../ex_table_output/" class="dropdown-item">Example with table output</a>
+</li>
+                                    
+<li>
+    <a href="../ex_file_output/" class="dropdown-item">Example with file output</a>
+</li>
+                                    
+<li>
+    <a href="../ex_number_string_output/" class="dropdown-item">Example with number and string outputs</a>
+</li>
+                                    
+<li>
+    <a href="../ex_console_output/" class="dropdown-item">Example with tool console log</a>
+</li>
+                                    
+<li>
+    <a href="../ex_plot/" class="dropdown-item">Example of graphs output</a>
+</li>
+                                    
+<li>
+    <a href="../ex_expression/" class="dropdown-item">Example of using QGIS expressions</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="navitem">
+                                <a href="../changelog/" class="nav-link">Changelog</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="https://github.com/north-road/qgis-processing-r" class="nav-link">Github</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href=".." class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../help-syntax/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#script-syntax" class="nav-link">Script syntax</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#metadata" class="nav-link">Metadata</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="script-syntax">Script syntax</h1>
+<p>The R scripts for the plugin use extension <strong>.rsx</strong>. These are classic R scripts with several metadata lines (starting with <code>##</code>) that define the interaction between QGIS and R. Metadata amongst other things specify how UI of the tool will look like.</p>
+<p>The script loads necessary packages by itself. Combination of <em>sp</em> and <em>rgdal</em> or <em>sf</em> for vector data and <em>sp</em> and <em>rgdal</em> or <em>raster</em> for raster data. Any other packages need to be directly loaded using <code>library()</code> command in the script body.</p>
+<h2 id="metadata">Metadata</h2>
+<p>The R script's file name is used to define the script name and id in the R processing provider. You can override these
+default metadata with these lines.</p>
+<p><code>##script_name=name</code> <em>script_name</em> is the name of the script; under this name, it will be listed in processing toolbox.
+It is also used to define the script id in the R processing provider.</p>
+<p><code>##script_title=display_name</code> <em>script_title</em> is the title of the script; under this title, it will be listed in processing toolbox.
+It overrides the <em>name</em> if it is defined after.</p>
+<p><code>##group_name=group</code> <em>group_name</em> is the name of the group of the script, which allows sorting of scripts into groups in processing toolbox.</p>
+<h3 id="script-behaviour">Script behaviour</h3>
+<p>Several metadata lines define the general behaviour of the script.</p>
+<p><code>##output_plots_to_html</code> (older version of this metadata keyword is <code>##showplots</code>) defines that there will be graphical output from the script that will be presented as an HTML page with images.</p>
+<p><code>##pass_filenames</code> (legacy alias <code>##passfilenames</code>) specifies that data are not passed directly. Instead only their file names are passed.</p>
+<p><code>##dont_load_any_packages</code> specifies that no packages, besides what is directly specified in script, should be loaded. This means that neither of <strong>sf</strong>, <strong>raster</strong>, <strong>sp</strong> or <strong>rgdal</strong> packages is loaded automatically. If spatial data (either raster or vector) should be passed to this script, the metadata <code>##pass_filenames</code> should be used as well.</p>
+<p><code>##user1/repo1,user2/repo2=github_install</code> allows instalation of <strong>R packages</strong> from GitHub using <a href="https://CRAN.R-project.org/package=remotes">remotes</a>. Multiple repos can be specified and divided by coma, white spaces around are stripped. The formats for repository specification are listed on <a href="https://remotes.r-lib.org/#usage">remotes website</a>.</p>
+<h3 id="inputs">Inputs</h3>
+<h4 id="simple-specification">Simple specification</h4>
+<p>The inputs to R script are specified as: <code>variable_name=variable_type [default_value/from_variable]</code>. This metadata line also specifies how tool UI will look in QGIS, as inputs are one section of the tool UI. In this specification <em>variable_name</em> is the name of the variable used in R script, <em>variable_type</em> is a type of input variable from possible input types (vector, raster, table, number, string, boolean, Field).
+This metadata line is based on the QGIS parameter <code>asScriptCode</code> / <code>fromScriptCode</code> string definition.</p>
+<p>The <em>default_value</em> is applicable to number, string, boolean, range, color folder and file inputs.</p>
+<p>The <em>from</em> variable_ applies to Field and must point to <em>variable_name</em> of vector input.</p>
+<p>So the inputs can look like this:</p>
+<p><code>##Layer=vector</code> specifies that there will be variable <code>Layer</code> that will be a vector.</p>
+<p><code>##X=Field Layer</code> specifies that variable <code>X</code> will be field name taken from <code>Layer</code>.</p>
+<p><code>##Raster_Layer=raster</code> specifies that there will be variable <code>Layer</code> that will be a raster.</p>
+<p><code>##X=Band Raster_Layer</code> specifies that variable <code>X</code> will be raster band index taken from <code>Raster_Layer</code>.</p>
+<p><code>##Size=number 10</code> specifies that there will be variable <code>Size</code> that will be numeric, and a default value for <code>Size</code> will be <code>10</code>.</p>
+<p><code>##Extent=extent</code> specifies that there will be variable <code>Extent</code> that will be numeric of length <code>4</code> (<em>xmin</em>, <em>xmax</em>, <em>ymin</em> and <em>ymax</em> values).</p>
+<p><code>##CRS=crs</code> specifies that there will be variable <code>CRS</code> that will be <code>EPSG:____</code> string.</p>
+<p><code>##Range=range 0,1</code> specifies that the <code>Range</code> variable will be a two numeric values vector with names (min/max values). The parameter accepts default values, e.g. <code>0,1</code>. A range widget will be displayed for setting the values.</p>
+<p><code>##Color=color withopacity #FF0000CC</code> specifies that the <code>Color</code> variable will be a text string of the chosen color in hexadecimal format. This parameter will display a color selection widget. The parameter accepts default values, for example <code>#FF0000</code>. The opacity value depends on the <code>withopacity</code> option.</p>
+<p><code>##Date_Time=datetime</code> specifies that the <code>Date_Time</code> variable will be a <code>POSIXct</code> vector of length <code>1</code> of the date and time choosing from the <code>datetime</code> widget . The parameter does not accept default values, instead, the current date and time will set by default.</p>
+<h5 id="enum">Enum</h5>
+<p>The basic enum syntax is <code>##var_enum=enum a;b;c</code> to select from values <code>a</code>, <code>b</code> or <code>c</code>. The value of <code>var_enum</code> in this case will be integer indicated position of the selected item in a list. So for example, if <code>a</code> is selected the value of <code>var_enum</code> will be <code>0</code>.</p>
+<p>The approach described above works well for a wide range of applications but for <strong>R</strong> it is often not ideal. That is a reason why a new type of enum is available in script syntax.</p>
+<p>The syntax is <code>##var_enum_string=enum literal a;b;c</code>. The important part here is the keyword <code>literal</code> (or more precisely <code>enum literal</code>) which specifies that the value from the select box to <code>var_enum_string</code> should be passed as a string. So if <code>b</code> is selected, then the value of <code>var_enum_string</code> will be <code>"b"</code>.</p>
+<p>Enum also accept multiples choices in both, literal or numeric setups, i.e. <code>##var_enum_string=enum literal multiple a;b;c</code> or <code>##var_enum_string=enum multiple a;b;c</code>. The variables in R will behave in the same way as non-multiple setup.</p>
+<h4 id="advanced-specification">Advanced specification</h4>
+<p>The inputs to R script are specified as: <code>QgsProcessingParameter|name|description|other_parameters_separated_by_pipe</code>.
+The <em>other</em> parameter_ separated_ by_ pipe_ can contain the <code>QgsProcessingParameter</code> specific parameters.
+This metadata line is based on the QGIS definitions used in description file used by GRASS7, SAGA and others providers.</p>
+<p>So the inputs can look like this:</p>
+<p><code>##QgsProcessingParameterFeatureSource|INPUT|Vector layer</code> specifies that there will be variable <code>INPUT</code> that will be a vector.</p>
+<p><code>##QgsProcessingParameterField|FIELDS|Attributes|None|INPUT|-1|False|False</code> specifies that there will be variable <code>FIELDS</code> that will be a field index.</p>
+<p><code>##QgsProcessingParameterRasterLayer|INPUT|Grid</code> specifies that there will be variable <code>INPUT</code> that will be a raster.</p>
+<p><code>##QgsProcessingParameterNumber|SIZE|Aggregation Size|QgsProcessingParameterNumber.Integer|10</code> specifies that there will be variable <code>Size</code> that will be numeric, and a default value for <code>Size</code> will be <code>10</code>.</p>
+<p><code>##QgsProcessingParameterEnum|METHOD|Method|[0] Sum;[1] Min;[2] Max</code> specifies that there will be variable <code>METHOD</code> that will be a value provided under <code>[]</code>.</p>
+<p><code>##QgsProcessingParameterVectorDestination|OUTPUT|Result</code> specifies that there will be variable <code>OUTPUT</code> that will be the destination file.</p>
+<h5 id="feature-source">Feature source</h5>
+<p><code>##QgsProcessingParameterFeatureSource|name|description|geometry type|default value|optional</code>
+* <em>name</em> is mandatory
+* <em>description</em> is mandatory
+* <em>geometry type</em> is optional and the default value is <code>-1</code> for any geometry, the available values are <code>0</code> for point, <code>1</code> for line, <code>2</code> for polygon, <code>5</code> for table
+* <em>default value</em> is optional and the default value is <code>None</code>
+* <em>optional</em> is optional and the default value is <code>False</code></p>
+<p><code>##QgsProcessingParameterFeatureSource|INPUT|Points|0</code> specifies that there will be variable <code>INPUT</code> that will be a vector point layer.</p>
+<p><code>##QgsProcessingParameterFeatureSource|INPUT|Lines|1</code> specifies that there will be variable <code>INPUT</code> that will be a vector line layer.</p>
+<p><code>##QgsProcessingParameterFeatureSource|INPUT|Polygons|2</code> specifies that there will be variable <code>INPUT</code> that will be a vector polygon layer.</p>
+<p><code>##QgsProcessingParameterFeatureSource|INPUT|Table|5</code> specifies that there will be variable <code>INPUT</code> that will be a vector layer to provide table.</p>
+<p><code>##QgsProcessingParameterFeatureSource|INPUT|Optional layer|-1|None|True</code> specifies that there will be variable <code>INPUT</code> that will be an optional vector layer.</p>
+<h5 id="raster-layer">Raster layer</h5>
+<p><code>##QgsProcessingParameterRasterLayer|name|description|default value|optional</code>
+* <em>name</em> is mandatory
+* <em>description</em> is mandatory
+* <em>default value</em> is optional and the default value is <code>None</code>
+* <em>optional</em> is optional and the default value is <code>False</code></p>
+<h5 id="file-or-folder-parameter">File or folder parameter</h5>
+<p><code>##QgsProcessingParameterFile|name|description|behavior|extension|default value|optional|file filter</code>
+* <em>name</em> is mandatory
+* <em>description</em> is mandatory
+* <em>behavior</em> is optional and the default value is <code>0</code> for file, <code>1</code> is for folder input parameter
+* <em>extension</em> is optional and specifies a file extension associated with the parameter (e.g. <code>html</code>). Use <em>file filter</em> for a more flexible approach which allows for multiple file extensions. if <em>file filter</em> is specified it takes precedence and <em>extension</em> is emptied.
+* <em>default value</em> is optional and the default value is <code>None</code>
+* <em>optional</em> is optional and the default value is <code>False</code>
+* <em>file filter</em> is optional and specifies the available file extensions associted sith the parameter (e.g. <code>PNG Files (*.png);; JPG Files (*.jpg *.jpeg)</code>)</p>
+<p><code>##QgsProcessingParameterFile|in_file|Input file</code> specifies that there will be variable <code>in_file</code> that will be any file.</p>
+<p><code>##QgsProcessingParameterFile|in_folder|Input folder|1</code> specifies that there will be variable <code>in_folder</code> that will be a folder.</p>
+<p><code>##QgsProcessingParameterFile|in_gpkg|Input gpkg|0|gpkg</code> specifies that there will be variable <code>in_gpkg</code> that will be gpkg file.</p>
+<p><code>##QgsProcessingParameterFile|in_img|Input img|0|png|None|False|PNG Files (*.png);; JPG Files (*.jpg *.jpeg)</code>  specifies that there will be variable <code>in_img</code> that will be an image PNG or JPG.</p>
+<h4 id="qgis-expression">QGIS Expression</h4>
+<p>A QGIS expression can be used as input for the script. The syntax is <code>r_variable_name=expression</code> followed by space and any valid QGIS expression. The expression is evaluated in QGIS before passing the result value script to R. This type of input is hidden from user of the script and can only be modified by editing the R script itself.</p>
+<p>The following code:</p>
+<p><code>##qgis_expression=expression @qgis_version</code></p>
+<p>creates variable <code>qgis_expression</code> that will hold information about QGIS version on which the script was run (i.e. <strong>3.22.0-Białowieża</strong>).</p>
+<p><code>##example_geometry=expression make_circle( make_point(0, 0), 10)</code> creates R variable with name <code>example_geometry</code> that holds polygon created by the expression.</p>
+<p>The variable type for R is determined from type of expression output in QGIS. So far these types are supported - string, integer, float, date, time, datetime, geometry and lists (arrays) of these types.</p>
+<h3 id="outputs">Outputs</h3>
+<p>The outputs of R script are specified as <code>##variable_name=output output_type</code>. This line also specifies how tool UI will look in QGIS, as outputs are one section of the tool UI. In this specification <em>variable_name</em> specifies variable from the script that will be exported back to QGIS, <em>output_type</em> is one of the allowed types that can be returned from R script (layer, raster, folder, file, HTML, number, string, table).</p>
+<p>So the outputs can look like this:</p>
+<p><code>##New_string=output string</code> specifies that a variable <code>New_string</code> will be set in the script.</p>
+<p><code>##New_number=output number</code> specifies that a variable <code>New_number</code> will be set in the script.</p>
+<h4 id="layer-outputs">Layer outputs</h4>
+<p>For layer outputs, the line definition can end with the <code>noprompt</code> keyword. In this case, the <code>variable_name</code> has to be defined in the script. Otherwise, the UI will display a widget to let the user defined the output destination.</p>
+<p><code>##New_layer=output vector</code> specifies that the variable <code>New_layer</code> will be imported to QGIS as a vector layer.</p>
+<p><code>##New_raster=output raster</code> specifies that variable <code>New_raster</code> will be imported to QGIS as a raster layer.</p>
+<p><code>##New_table=output table</code> specifies that the variable <code>New_table</code> will be imported to QGIS as a vector layer without geometry (CSV file).</p>
+<h4 id="folder-and-files-outputs">Folder and files outputs</h4>
+<p>Like layer outputs, the folder and files outputs the line definition can end with the <code>noprompt</code> keyword.</p>
+<p><code>##New_file=output file</code> specifies that there will be variable <code>New_file</code> that will be a file path with <code>.file</code> extension</p>
+<p><code>##New_csv=output file csv</code> specifies that there will be variable <code>New_csv</code> that will be a file path with <code>.csv</code> extension</p>
+<p><code>##New_folder=output folder</code> specifies that there will be variable <code>New_folder</code> that will be a folder path</p>
+<h3 id="printing-from-r-to-tool-log">Printing from R to tool log</h3>
+<p>If any output of any line in R script should be outputted to tool log, it needs to be preceded by <code>&gt;</code>. So, for example, the following code will print the number of rows in <code>Layer</code>.</p>
+<pre><code>&gt;nrow(Layer)
+</code></pre></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+                <p>Copyright &copy; 2019 <a href="https://twitter.com/northroadgeo">North Road</a> and <a href="https://twitter.com/cahik13">Jan Caha</a>.</p>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/jquery-3.6.0.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
